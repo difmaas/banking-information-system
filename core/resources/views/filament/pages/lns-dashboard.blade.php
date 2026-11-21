@@ -1,3 +1,4 @@
+{{-- Filament page placeholder for the LNS module. --}}
 <x-filament-panels::page>
     <div class="space-y-2">
         <h2 class="text-lg font-semibold">Loan Management System</h2>

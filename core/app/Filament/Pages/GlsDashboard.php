@@ -4,6 +4,9 @@ namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
 
+/**
+ * Filament page that serves as the entry point for the GLS module.
+ */
 class GlsDashboard extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';

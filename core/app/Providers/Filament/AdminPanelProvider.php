@@ -19,8 +19,14 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Filament panel provider for the core banking Back-Office interface.
+ */
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * Configure the admin panel, authentication, and module discovery.
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel

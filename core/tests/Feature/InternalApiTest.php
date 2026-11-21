@@ -4,8 +4,14 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
+/**
+ * Feature tests for the internal API and service authentication middleware.
+ */
 class InternalApiTest extends TestCase
 {
+    /**
+     * The health endpoint must be reachable without service authentication.
+     */
     public function test_health_endpoint_is_public(): void
     {
         $this->getJson('/api/internal/v1/health')
@@ -16,12 +22,18 @@ class InternalApiTest extends TestCase
             ]);
     }
 
+    /**
+     * The modules endpoint must reject requests without service authentication.
+     */
     public function test_modules_endpoint_requires_service_authentication(): void
     {
         $this->getJson('/api/internal/v1/modules')
             ->assertUnauthorized();
     }
 
+    /**
+     * A correctly signed request must be accepted and return module summaries.
+     */
     public function test_modules_endpoint_accepts_valid_signature(): void
     {
         config([
@@ -45,6 +57,9 @@ class InternalApiTest extends TestCase
             ->assertJsonPath('data.gls.module', 'GLS');
     }
 
+    /**
+     * A request with an invalid signature must be rejected.
+     */
     public function test_modules_endpoint_rejects_invalid_signature(): void
     {
         config([

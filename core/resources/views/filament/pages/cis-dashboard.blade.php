@@ -1,3 +1,4 @@
+{{-- Filament page placeholder for the CIS module. --}}
 <x-filament-panels::page>
     <div class="space-y-2">
         <h2 class="text-lg font-semibold">Customer Information System</h2>

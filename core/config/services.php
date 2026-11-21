@@ -36,6 +36,7 @@ return [
     ],
 
     'core' => [
+        // Shared secret and token used to authenticate channel-to-core requests.
         'service_token' => env('CORE_SERVICE_TOKEN'),
         'hmac_secret' => env('CORE_SERVICE_SECRET'),
         'timestamp_tolerance' => (int) env('CORE_SERVICE_TIMESTAMP_TOLERANCE', 300),

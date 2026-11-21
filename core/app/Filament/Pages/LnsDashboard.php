@@ -4,6 +4,9 @@ namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
 
+/**
+ * Filament page that serves as the entry point for the LNS module.
+ */
 class LnsDashboard extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
