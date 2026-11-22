@@ -17,5 +17,7 @@ class CisDashboard extends Page
 
     protected static ?string $title = 'Customer Information System';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected string $view = 'filament.pages.cis-dashboard';
 }

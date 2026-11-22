@@ -9,41 +9,45 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
- * Seeds the roles, permissions, and demo admin user used by the core banking app.
+ * Seeds the roles, permissions, and demo users used by the Back-Office panel.
  */
 class RolePermissionSeeder extends Seeder
 {
-    /**
-     * Create permissions and roles, then assign roles to the demo admin.
-     */
     public function run(): void
     {
-        // Clear cached permissions so newly created roles/permissions are visible.
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        // Permissions grouped by module and administrative function.
         $permissions = [
             'cis.view',
             'cis.manage',
             'lns.view',
+            'lns.verify',
+            'lns.analyze',
+            'lns.approve',
+            'lns.disburse',
+            'lns.payment',
             'lns.manage',
             'gls.view',
             'gls.manage',
             'users.manage',
             'parameters.manage',
+            'audit.view',
+            'reports.view',
         ];
 
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission, 'web');
         }
 
-        // Role-to-permission mapping based on the BIS access matrix.
         $roles = [
-            'Admin' => $permissions,
-            'StafKredit' => ['cis.view', 'lns.view'],
-            'AnalisKredit' => ['cis.view', 'lns.view', 'lns.manage'],
-            'Komite' => ['lns.view', 'gls.view'],
-            'Teller' => ['cis.view', 'lns.view', 'gls.view'],
+            'Admin' => [
+                'cis.view', 'cis.manage', 'lns.view', 'lns.manage',
+                'gls.view', 'gls.manage', 'users.manage', 'parameters.manage', 'audit.view', 'reports.view',
+            ],
+            'StafKredit' => ['cis.view', 'lns.view', 'lns.verify'],
+            'AnalisKredit' => ['cis.view', 'lns.view', 'lns.analyze'],
+            'Komite' => ['lns.view', 'lns.approve', 'gls.view', 'reports.view'],
+            'Teller' => ['cis.view', 'lns.view', 'lns.disburse', 'lns.payment', 'gls.view'],
         ];
 
         foreach ($roles as $name => $rolePermissions) {
@@ -51,12 +55,21 @@ class RolePermissionSeeder extends Seeder
             $role->syncPermissions($rolePermissions);
         }
 
-        // Demo admin account for local development and Back-Office access.
-        $admin = User::updateOrCreate(
-            ['email' => 'admin@bis.test'],
-            ['name' => 'Admin', 'password' => 'password'],
-        );
+        $users = [
+            'admin@bis.test' => ['Admin', 'Admin'],
+            'staf@bis.test' => ['Staf Kredit', 'StafKredit'],
+            'analis@bis.test' => ['Analis Kredit', 'AnalisKredit'],
+            'komite@bis.test' => ['Komite', 'Komite'],
+            'teller@bis.test' => ['Teller', 'Teller'],
+        ];
 
-        $admin->syncRoles(['Admin']);
+        foreach ($users as $email => [$name, $role]) {
+            $user = User::updateOrCreate(
+                ['email' => $email],
+                ['name' => $name, 'password' => 'password'],
+            );
+
+            $user->syncRoles([$role]);
+        }
     }
 }

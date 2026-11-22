@@ -17,5 +17,7 @@ class GlsDashboard extends Page
 
     protected static ?string $title = 'General Ledger System';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected string $view = 'filament.pages.gls-dashboard';
 }

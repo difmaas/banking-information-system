@@ -17,5 +17,7 @@ class LnsDashboard extends Page
 
     protected static ?string $title = 'Loan Management System';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected string $view = 'filament.pages.lns-dashboard';
 }
