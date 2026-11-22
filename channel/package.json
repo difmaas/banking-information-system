@@ -22,5 +22,12 @@
     },
     "overrides": {
         "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+    },
+    "devDependencies": {
+        "@alpinejs/anchor": "^3.17.5",
+        "@alpinejs/collapse": "^3.17.5",
+        "@alpinejs/focus": "^3.17.5",
+        "@floating-ui/dom": "^1.8.0",
+        "alpinejs": "^3.17.5"
     }
 }

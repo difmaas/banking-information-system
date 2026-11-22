@@ -1,35 +1,21 @@
 <?php
 
 use App\Concerns\PasswordValidationRules;
-use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
-use Laravel\Fortify\Features;
-use Laravel\Fortify\Fortify;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Security settings')] class extends Component {
+new #[Title('Keamanan Akun')] class extends Component
+{
     use PasswordValidationRules;
 
     public string $current_password = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
 
-
-
-    /**
-     * Mount the component.
-     */
-    public function mount(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
-    {
-
-    }
-
-    /**
-     * Update the password for the currently authenticated user.
-     */
     public function updatePassword(): void
     {
         try {
@@ -49,54 +35,36 @@ new #[Title('Security settings')] class extends Component {
 
         $this->reset('current_password', 'password', 'password_confirmation');
 
-        Flux::toast(variant: 'success', text: __('Password updated.'));
+        $this->dispatch('toast', type: 'success', description: __('Kata sandi diperbarui.'));
     }
-
-
 }; ?>
 
 <section class="w-full">
     @include('partials.settings-heading')
 
-    <flux:heading level="2" class="sr-only">{{ __('Security settings') }}</flux:heading>
+    <x-pages::settings.layout :heading="__('Ubah Kata Sandi')" :subheading="__('Gunakan kata sandi yang panjang dan unik agar akun tetap aman.')">
+        <form wire:submit="updatePassword" class="w-full space-y-6">
+            <x-ui.field>
+                <x-ui.field-label for="current_password">{{ __('Kata sandi saat ini') }}</x-ui.field-label>
+                <x-ui.input id="current_password" wire:model="current_password" type="password" required autocomplete="current-password" />
+                <x-ui.field-error :messages="$errors->get('current_password')" />
+            </x-ui.field>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
-            <flux:input
-                wire:model="current_password"
-                :label="__('Current password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                viewable
-            />
-            <flux:input
-                wire:model="password"
-                :label="__('New password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
-            <flux:input
-                wire:model="password_confirmation"
-                :label="__('Confirm password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+            <x-ui.field>
+                <x-ui.field-label for="password">{{ __('Kata sandi baru') }}</x-ui.field-label>
+                <x-ui.input id="password" wire:model="password" type="password" required minlength="8" autocomplete="new-password" />
+                <x-ui.field-error :messages="$errors->get('password')" />
+            </x-ui.field>
 
-            <div class="flex items-center gap-4">
-                <flux:button variant="primary" type="submit" data-test="update-password-button">
-                    {{ __('Save') }}
-                </flux:button>
-            </div>
+            <x-ui.field>
+                <x-ui.field-label for="password_confirmation">{{ __('Konfirmasi kata sandi baru') }}</x-ui.field-label>
+                <x-ui.input id="password_confirmation" wire:model="password_confirmation" type="password" required minlength="8" autocomplete="new-password" />
+                <x-ui.field-error :messages="$errors->get('password_confirmation')" />
+            </x-ui.field>
+
+            <x-ui.button type="submit" data-test="update-password-button">
+                {{ __('Simpan Kata Sandi') }}
+            </x-ui.button>
         </form>
-
-
     </x-pages::settings.layout>
-
 </section>

@@ -1,54 +1,67 @@
-<x-layouts::auth :title="__('Reset password')">
+<x-layouts::auth :title="__('Atur ulang kata sandi')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+        <x-auth-header
+            :title="__('Atur ulang kata sandi')"
+            :description="__('Masukkan kata sandi baru Anda di bawah ini.')"
+        />
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <x-auth-session-status :status="session('status')" />
 
-        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-6">
+        @if ($errors->any())
+            <x-ui.alert tone="danger">
+                <x-lucide-circle-alert />
+                <x-ui.alert-description>{{ __('Periksa kembali kata sandi Anda.') }}</x-ui.alert-description>
+            </x-ui.alert>
+        @endif
+
+        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-5">
             @csrf
-            <!-- Token -->
             <input type="hidden" name="token" value="{{ request()->route('token') }}">
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                value="{{ request('email') }}"
-                :label="__('Email')"
-                type="email"
-                required
-                autocomplete="email"
-            />
+            <x-ui.field>
+                <x-ui.field-label for="email">{{ __('Email') }}</x-ui.field-label>
+                <x-ui.input
+                    id="email"
+                    name="email"
+                    type="email"
+                    :value="request('email')"
+                    required
+                    autocomplete="email"
+                />
+                <x-ui.field-error :messages="$errors->get('email')" />
+            </x-ui.field>
 
-            <!-- Password -->
-            <flux:input
-                name="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Password')"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+            <x-ui.field>
+                <x-ui.field-label for="password">{{ __('Kata Sandi Baru') }}</x-ui.field-label>
+                <x-ui.input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    minlength="8"
+                    autocomplete="new-password"
+                    placeholder="Minimal 8 karakter"
+                />
+                <x-ui.field-error :messages="$errors->get('password')" />
+            </x-ui.field>
 
-            <!-- Confirm Password -->
-            <flux:input
-                name="password_confirmation"
-                :label="__('Confirm password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Confirm password')"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+            <x-ui.field>
+                <x-ui.field-label for="password_confirmation">{{ __('Konfirmasi Kata Sandi') }}</x-ui.field-label>
+                <x-ui.input
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    type="password"
+                    required
+                    minlength="8"
+                    autocomplete="new-password"
+                    placeholder="Ulangi kata sandi"
+                />
+                <x-ui.field-error :messages="$errors->get('password_confirmation')" />
+            </x-ui.field>
 
-            <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
-                    {{ __('Reset password') }}
-                </flux:button>
-            </div>
+            <x-ui.button type="submit" class="w-full" data-test="reset-password-button">
+                {{ __('Atur ulang kata sandi') }}
+            </x-ui.button>
         </form>
     </div>
 </x-layouts::auth>

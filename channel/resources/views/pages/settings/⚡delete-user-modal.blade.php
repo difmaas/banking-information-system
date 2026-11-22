@@ -3,16 +3,30 @@
 use App\Concerns\PasswordValidationRules;
 use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
-new class extends Component {
+new class extends Component
+{
     use PasswordValidationRules;
 
     public string $password = '';
 
-    /**
-     * Delete the currently authenticated user.
-     */
+    public bool $confirmingDelete = false;
+
+    #[On('open-delete-user')]
+    public function open(): void
+    {
+        $this->confirmingDelete = true;
+    }
+
+    public function cancel(): void
+    {
+        $this->confirmingDelete = false;
+        $this->reset('password');
+        $this->resetValidation();
+    }
+
     public function deleteUser(Logout $logout): void
     {
         $this->validate([
@@ -25,26 +39,30 @@ new class extends Component {
     }
 }; ?>
 
-<flux:modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
-    <form method="POST" wire:submit="deleteUser" class="space-y-6">
-        <div>
-            <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
+<div>
+    @if ($confirmingDelete)
+        <x-ui.card class="mt-6 max-w-lg p-5 sm:p-6">
+        <h3 class="text-lg font-semibold">{{ __('Apakah Anda yakin ingin menghapus akun?') }}</h3>
+        <p class="mt-2 text-sm text-muted-foreground">
+            {{ __('Seluruh data dan riwayat Anda akan dihapus secara permanen. Masukkan kata sandi untuk mengonfirmasi.') }}
+        </p>
 
-            <flux:subheading>
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </flux:subheading>
-        </div>
+        <form wire:submit="deleteUser" class="mt-5 space-y-4">
+            <x-ui.field>
+                <x-ui.field-label for="delete_password">{{ __('Kata Sandi') }}</x-ui.field-label>
+                <x-ui.input id="delete_password" wire:model="password" type="password" required autocomplete="current-password" />
+                <x-ui.field-error :messages="$errors->get('password')" />
+            </x-ui.field>
 
-        <flux:input wire:model="password" :label="__('Password')" type="password" viewable />
-
-        <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-            <flux:modal.close>
-                <flux:button variant="filled">{{ __('Cancel') }}</flux:button>
-            </flux:modal.close>
-
-            <flux:button variant="danger" type="submit" data-test="confirm-delete-user-button">
-                {{ __('Delete account') }}
-            </flux:button>
-        </div>
-    </form>
-</flux:modal>
+            <div class="flex justify-end gap-2">
+                <x-ui.button type="button" variant="ghost" wire:click="cancel">
+                    {{ __('Batal') }}
+                </x-ui.button>
+                <x-ui.button type="submit" variant="destructive" data-test="confirm-delete-user-button">
+                    {{ __('Hapus akun') }}
+                </x-ui.button>
+            </div>
+        </form>
+        </x-ui.card>
+    @endif
+</div>

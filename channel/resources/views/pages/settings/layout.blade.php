@@ -1,20 +1,29 @@
-<div class="flex items-start max-md:flex-col">
-    <div class="me-10 w-full pb-4 md:w-[220px]">
-        <flux:navlist aria-label="{{ __('Settings') }}">
-            <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('security.edit')" wire:navigate>{{ __('Security') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
-        </flux:navlist>
+<div class="flex items-start gap-6 max-md:flex-col">
+    <div class="w-full md:w-56">
+        <x-ui.card class="p-2">
+            <nav class="flex flex-col gap-1" aria-label="{{ __('Pengaturan') }}">
+                <x-ui.button href="{{ route('profile.edit') }}" variant="ghost" class="w-full justify-start" wire:navigate>
+                    <x-lucide-user class="size-4" />
+                    {{ __('Profil') }}
+                </x-ui.button>
+                <x-ui.button href="{{ route('security.edit') }}" variant="ghost" class="w-full justify-start" wire:navigate>
+                    <x-lucide-lock class="size-4" />
+                    {{ __('Keamanan') }}
+                </x-ui.button>
+                <x-ui.button href="{{ route('appearance.edit') }}" variant="ghost" class="w-full justify-start" wire:navigate>
+                    <x-lucide-paintbrush class="size-4" />
+                    {{ __('Tampilan') }}
+                </x-ui.button>
+            </nav>
+        </x-ui.card>
     </div>
 
-    <flux:separator class="md:hidden" />
+    <x-ui.card class="flex-1 self-stretch p-5 sm:p-6">
+        <h2 class="text-lg font-semibold">{{ $heading ?? '' }}</h2>
+        <p class="mt-1 text-sm text-muted-foreground">{{ $subheading ?? '' }}</p>
 
-    <div class="flex-1 self-stretch max-md:pt-6">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
-
-        <div class="mt-5 w-full max-w-lg">
+        <div class="mt-5 w-full max-w-xl">
             {{ $slot }}
         </div>
-    </div>
+    </x-ui.card>
 </div>

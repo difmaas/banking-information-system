@@ -1,15 +1,25 @@
 @import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+@import "./blatui.css";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-brand-50: #f0fdfa;
+    --color-brand-100: #ccfbf1;
+    --color-brand-200: #99f6e4;
+    --color-brand-300: #5eead4;
+    --color-brand-400: #2dd4bf;
+    --color-brand-500: #14b8a6;
+    --color-brand-600: #0d9488;
+    --color-brand-700: #0f766e;
+    --color-brand-800: #115e59;
+    --color-brand-900: #134e4a;
+    --color-brand-950: #042f2e;
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -23,20 +33,33 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    --color-accent: var(--color-brand-700);
+    --color-accent-content: var(--color-brand-700);
     --color-accent-foreground: var(--color-white);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-brand-400);
+        --color-accent-content: var(--color-brand-300);
+        --color-accent-foreground: var(--color-brand-950);
     }
 }
 
+:root {
+    --primary: oklch(0.58 0.11 185);
+    --primary-foreground: oklch(0.99 0 0);
+}
+
+.dark {
+    --primary: oklch(0.72 0.12 185);
+    --primary-foreground: oklch(0.2 0.05 190);
+}
+
 @layer base {
+    [x-cloak] {
+        display: none !important;
+    }
 
     *,
     ::after,
@@ -47,20 +70,35 @@
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+@layer components {
+    .portal-card {
+        @apply rounded-3xl border border-zinc-200/80 bg-white shadow-sm shadow-zinc-950/5 dark:border-zinc-800 dark:bg-zinc-900;
+    }
+
+    .portal-card-muted {
+        @apply rounded-2xl border border-zinc-200/70 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/60;
+    }
+
+    .portal-hero {
+        @apply relative overflow-hidden rounded-3xl bg-linear-to-br from-brand-800 via-brand-700 to-brand-500 p-6 text-white shadow-lg shadow-brand-950/20 sm:p-8;
+    }
+
+    .portal-grid {
+        @apply grid gap-4 sm:gap-5;
+    }
+
+    .portal-eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400;
+    }
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
-}
+@media print {
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+    .print\:hidden {
+        display: none !important;
+    }
 }
-
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */

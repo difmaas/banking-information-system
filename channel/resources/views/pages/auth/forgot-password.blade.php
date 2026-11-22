@@ -1,31 +1,46 @@
-<x-layouts::auth :title="__('Forgot password')">
+<x-layouts::auth :title="__('Lupa kata sandi')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Forgot password')" :description="__('Enter your email to receive a password reset link')" />
+        <x-auth-header
+            :title="__('Lupa kata sandi')"
+            :description="__('Masukkan email Anda untuk menerima tautan pengaturan ulang kata sandi.')"
+        />
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <x-auth-session-status :status="session('status')" />
 
-        <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-6">
+        @if ($errors->any())
+            <x-ui.alert tone="danger">
+                <x-lucide-circle-alert />
+                <x-ui.alert-description>{{ __('Periksa kembali alamat email Anda.') }}</x-ui.alert-description>
+            </x-ui.alert>
+        @endif
+
+        <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-5">
             @csrf
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="__('Email address')"
-                type="email"
-                required
-                autofocus
-                placeholder="email@example.com"
-            />
+            <x-ui.field>
+                <x-ui.field-label for="email">{{ __('Email') }}</x-ui.field-label>
+                <x-ui.input
+                    id="email"
+                    name="email"
+                    type="email"
+                    :value="old('email')"
+                    required
+                    autofocus
+                    placeholder="nama@email.com"
+                />
+                <x-ui.field-error :messages="$errors->get('email')" />
+            </x-ui.field>
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="email-password-reset-link-button">
-                {{ __('Email password reset link') }}
-            </flux:button>
+            <x-ui.button type="submit" class="w-full" data-test="email-password-reset-link-button">
+                {{ __('Kirim tautan pengaturan ulang') }}
+            </x-ui.button>
         </form>
 
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-400">
-            <span>{{ __('Or, return to') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('log in') }}</flux:link>
+        <div class="text-center text-sm text-muted-foreground">
+            {{ __('Atau kembali ke') }}
+            <x-ui.button variant="link" href="{{ route('login') }}" wire:navigate>
+                {{ __('halaman masuk') }}
+            </x-ui.button>
         </div>
     </div>
 </x-layouts::auth>

@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'core' => [
+        'driver' => env('CORE_DRIVER', 'stub'),
+        'base_url' => env('CORE_BASE_URL', 'http://localhost:8001'),
+        'service_token' => env('CORE_SERVICE_TOKEN'),
+        'hmac_secret' => env('CORE_SERVICE_SECRET'),
+        'timeout' => (int) env('CORE_TIMEOUT', 10),
+    ],
+
 ];

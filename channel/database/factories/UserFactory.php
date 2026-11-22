@@ -27,8 +27,13 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'nik' => fake()->unique()->numerify('################'),
+            'phone' => fake()->unique()->numerify('08##########'),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'pin_hash' => Hash::make('654321'),
+            'pin_set_at' => now(),
+            'pin_failed_attempts' => 0,
             'remember_token' => Str::random(10),
         ];
     }
@@ -40,6 +45,14 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function withoutPin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'pin_hash' => null,
+            'pin_set_at' => null,
         ]);
     }
 }
